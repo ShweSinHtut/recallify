@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recallify</title>
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="stylesheet" href="styles/remixicon.css">
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="styles/header.css">
+  <link rel="stylesheet" href="styles/sidebar.css">
+</head>
+<body>
+  <header> 
+    <div class="header-left-section">
+      <div class="current-month"></div>
+      <div class="current-full-date"></div>
+    </div>
+    <div class="header-middle-section">
+      <input type="text" id="schedule-lessons-search" class="search-bar" placeholder="Search something" autocomplete="off">
+      <i class="ri-search-line"></i>
+    </div>
+    <div class="header-right-section">
+      <i class="ri-switch-line"></i>
+    </div>
+  </header>
+
+  <nav class="side-bar-container">
+    <a href="" class="logo">
+      <img src="images/logo-gradient.png" alt="Recallify Logo">
+    </a>
+
+    <div class="nav-options">
+      <button id="today-btn" class="active" data-target="today">
+        <i class="ri-calendar-check-line"></i>
+        <p>Today</p>
+      </button>
+      <button id="add-lessons-btn" class=""  data-target="add-lessons">
+        <i class="ri-add-circle-line"></i>
+        <p>Add Lessons</p>
+      </button>
+      <button id="schedule-btn" class=""  data-target="schedule">
+        <i class="ri-calendar-todo-line"></i>
+        <p>Schedule</p>
+      </button>
+    </div>
+  </nav>
+
+  <main>
+    <section id="today" class="content active today-content">
+      <h1>Lessons To Revise Today</h1>
+      <div class="today-lessons-grid">
+        <!-- <div>
+          <h2>World War II</h2>
+          <p>
+            - Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+            <br>
+            - Ipsum cum, ad distinctio mollitia nostrum eos rem sunt exercitationem aliquid nulla praesentium nisi magni nam et similique animi minima aspernatur molestias.
+          </p>
+        </div>
+
+        <div>
+          <h2>World War II</h2>
+          <p>
+            - Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+          </p>
+        </div> -->
+      </div>
+    </section>
+
+    <section id="add-lessons" class="content add-lessons-content ">
+      <h1>What did you learn today?</h1>
+
+      <div class="input-container">
+        <textarea class="lesson-details-textarea" name="" id="" placeholder="Lesson Details"></textarea>
+        <input class="lessons-title-input" type="text" name="" id="" placeholder="Add lesson title">
+        <button class="add-lessons-btn">Add</button>
+      </div>
+
+      <div class="lessons-input-display-grid">
+      </div>
+    </section>
+
+    <section id="schedule" class="content schedule-content">
+      <h1>Upcoming Lessons to Review</h1>
+      <div class="lessons-to-review-grid">
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="scripts/main.js"></script>
+</body>
+</html>
