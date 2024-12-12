@@ -42,16 +42,13 @@ function renderActiveSection(button) {
 /* Add Lessons Handling */
 const today = dayjs().format('YYYYMMDD');
 
-// Fetch lessons from localStorage
 const storedLessons = JSON.parse(localStorage.getItem('lessons')) || [];
-lessons.push(...storedLessons);
+lessons.push(...storedLessons); /*******/
 
-// Filter lessons to display only today's lessons
 function filterTodaysLessons(lessons, today) {
   return lessons.filter((lesson) => lesson.date === today);
 }
 
-// Display lessons immediately on page load
 displayInputLessons(filterTodaysLessons(lessons, today));
 
 // Add new lesson and update display
@@ -63,19 +60,14 @@ document.querySelector('.add-lessons-btn').addEventListener('click', () => {
   const title = titleElement.value.trim();
 
   if (title && details) {
-    // Create a new lesson using addLessons method
     const newLesson = addLessons(title, details, today)
     
-    // Add the new lesson to the lessons array
     lessons.push(newLesson);
 
-    // Save updated lessons to localStorage
     localStorage.setItem('lessons', JSON.stringify(lessons));
 
-    // Display the updated lessons
     displayInputLessons(filterTodaysLessons(lessons, today));
 
-    // Clear input fields
     detailsElement.value = '';
     titleElement.value = '';
   }
@@ -84,7 +76,6 @@ document.querySelector('.add-lessons-btn').addEventListener('click', () => {
 function addLessons(title, details, date) {
   const dayjsDate = dayjs(date);
 
-  // Generate revision dates
   const revisionDates = [
     dayjsDate.add(1, 'day').format('YYYYMMDD'),
     dayjsDate.add(3, 'days').format('YYYYMMDD'),
@@ -94,21 +85,12 @@ function addLessons(title, details, date) {
 
 
   return {
-    id: `${title}-${dayjsDate.format('YYYYMMDD')}`.replace(/\s+/g, '-').toLowerCase(),
+    id: `${title}-${dayjsDate.format('YYYYMMDD')}`.replace(/\s+/g, '-').toLowerCase(), /*******/
     title,
     details,
     date: dayjsDate.format('YYYYMMDD'),
     revisionDates,
   };
-
-  // Fetch existing lessons from localStorage
-  // const lessons = JSON.parse(localStorage.getItem('lessons')) || [];
-
-  // Append the new lesson
-  // lessons.push(newLesson);
-
-  // Save the updated lessons back to localStorage
-  // localStorage.setItem('lessons', JSON.stringify(lessons));
 }
 
 /* Display Lessons */ 
@@ -130,11 +112,8 @@ function displayInputLessons(lessons) {
     `;
   });
 
-  // Update the lessons display grid
   lessonsGrid.innerHTML = lessonsHTML;
 }
-
-
 
 
 
@@ -158,7 +137,7 @@ function getTodayLessons(lessons, today) {
 function displayTodayLessons(lessons) {
   const todayLessonGrid = document.querySelector('.today-lessons-grid');
 
-  if(!lessons || lessons.length === 0) {
+  if (!lessons || lessons.length === 0) {
     todayLessonGrid.innerHTML = `
       <div class="no-lessons">
         <p>No lessons to revise for today!
@@ -170,16 +149,28 @@ function displayTodayLessons(lessons) {
     return;
   }
 
-  const todayLessonsHTML = lessons.map((lesson) => {
-    return `
-      <div>
-        <h2>${lesson.title}</h2>
-        <p>
-          ${lesson.details.replace(/\n/g, '<br>')}
-        </p>
-      </div>
-    `;
-  }).join('');
+  const gradients = [
+    'linear-gradient(135deg, #ffc3d0, #96c2ff)',
+    'linear-gradient(80deg, #ddbbff, #96c2ff)',
+    'linear-gradient(135deg, #dee8ff, #ffbf94)',
+    'linear-gradient(135deg, #bfffe5, #faa9c2)',
+    'linear-gradient(#c5e2ba, #dfc5ec)'
+  ];
+  let gradientIndex = 0;
+
+  const todayLessonsHTML = lessons
+    .map((lesson) => {
+      const backgroundGradient = gradients[gradientIndex % gradients.length]; /*******/
+      gradientIndex++;
+
+      return `
+        <div class="lesson-block" style="background: ${backgroundGradient};">
+          <h2>${lesson.title}</h2>
+          <p>${lesson.details.replace(/\n/g, '<br>')}</p>
+        </div>
+      `;
+    })
+    .join('');
 
   todayLessonGrid.innerHTML = todayLessonsHTML;
 }
@@ -204,12 +195,10 @@ document.querySelector('.today-lessons-grid')
   
 /* Schedule Button Handling */
 document.querySelector('#schedule-lessons-search').addEventListener('input', (e) => {
-  const searchValue = e.target.value.trim().toLowerCase(); // Get user input
+  const searchValue = e.target.value.trim().toLowerCase(); 
   
-  // Get all upcoming lessons
   const upcomingLessons = getUpcomingLessons(lessons, today);
 
-  // Filter lessons based on search query
   const filteredLessons = upcomingLessons.filter((lesson) => {
     return (
       lesson.title.toLowerCase().includes(searchValue) ||
@@ -217,19 +206,18 @@ document.querySelector('#schedule-lessons-search').addEventListener('input', (e)
     );
   });
 
-  // If no search value or lessons match the search, do not update the content
   if (searchValue && filteredLessons.length === 0) {
-    return; // Exit the function and keep the existing displayed lessons
+    return; 
   }
 
-  // Display the filtered lessons, highlighting the search query
   displayUpcomingLessons(filteredLessons, searchValue, document.querySelector('.lessons-to-review-grid'));
 });
 
 function highlightText(text, searchValue) {
-  if (!searchValue) return text; // No highlighting if searchValue is empty
+  if (!searchValue) return text; 
 
-  const regex = new RegExp(`(${searchValue})`, 'gi'); // Case-insensitive matching
+  /*******/
+  const regex = new RegExp(`(${searchValue})`, 'gi'); // Case-insensitive matching  
   return text.replace(regex, '<mark>$1</mark>'); // Wrap matched text in <mark> tags
 }
 
@@ -244,21 +232,19 @@ function displayUpcomingLessons(upcomingLessons, searchValue = '', targetContain
   }
 
   // Group lessons by date
-  const groupedLessons = upcomingLessons.reduce((groups, lesson) => {
-    if (!groups[lesson.date]) {
+  const groupedLessons = upcomingLessons.reduce((groups, lesson) => {  /*******/
+    if (!groups[lesson.date]) {   /*******/
       groups[lesson.date] = [];
     }
     groups[lesson.date].push(lesson);
     return groups;
   }, {});
 
-  // Predefined colors for alternating backgrounds
   const colors = ['#FFD6E6', '#B3D9FF', '#FFF4B3', '#E1F7D5', '#FFEBF2'];
   let colorIndex = 0;
 
-  // Generate HTML for each group
-  const lessonsHTML = Object.entries(groupedLessons)
-    .map(([date, lessons]) => {
+  const lessonsHTML = Object.entries(groupedLessons)    /*******/
+    .map(([date, lessons]) => {   /*******/
       const backgroundColor = colors[colorIndex % colors.length];
       colorIndex++;
 
@@ -290,7 +276,7 @@ function displayUpcomingLessons(upcomingLessons, searchValue = '', targetContain
 
 function getUpcomingLessons(lessons, today) {
   // Flatten all lessons with their revisionDates into an array of objects
-  const upcoming = lessons.flatMap((lesson) =>
+  const upcoming = lessons.flatMap((lesson) =>    /*******/
     lesson.revisionDates.map((date) => ({
       title: lesson.title,
       details: lesson.details,
@@ -298,13 +284,11 @@ function getUpcomingLessons(lessons, today) {
     }))
   );
 
-  // Filter to include only dates that are today or later
   const upcomingFiltered = upcoming.filter(
-    (item) => dayjs(item.date).diff(today, 'day') >= 0
+    (item) => dayjs(item.date).diff(today, 'day') >= 0    /*******/
   );    
 
-  // Sort the array by date (earliest first)
-  return upcomingFiltered.sort((a, b) => dayjs(a.date) - dayjs(b.date));
+  return upcomingFiltered.sort((a, b) => dayjs(a.date) - dayjs(b.date));   /*******/
 }
 
 // Handle "Schedule" button click
